@@ -458,3 +458,50 @@ body {
     max-width: 90%;
   }
 }
+
+/* Responsive Styles for Mobile Chat View */
+@media screen and (max-width: 768px) {
+  .home {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .home .container {
+    /* This rule is duplicated, but we will ensure the final version is clean. */
+    /* It's part of the logic to create a slidable container */
+    transition: transform 0.3s ease-in-out;
+    width: 200%;
+    display: flex;
+    flex-direction: row; /* This should be row to place sidebar and chat side-by-side */
+  }
+
+  .home .sidebar, .home .chat {
+    width: 50%; /* Each takes half of the double-width container */
+    height: 100%; /* Ensure they take full height */
+  }
+
+  /* When a chat is selected, slide the container to the left */
+  .home.chat-selected .container {
+    transform: translateX(-50%);
+  }
+
+  .chat .chatInfo .back-button {
+    display: block; /* Show back button on mobile */
+    margin-right: 10px;
+    background: #5d5b8d;
+    color: lightgray;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .chat .chatInfo span {
+    font-size: 16px;
+  }
+}
+
+/* Hide back button on desktop */
+.chat .chatInfo .back-button {
+    display: none;
+}

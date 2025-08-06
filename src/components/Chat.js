@@ -19,7 +19,7 @@ const Chat = () => {
   const [text, setText] = useState("");
   const [img, setImg] = useState(null);
 
-  const { data } = useContext(ChatContext);
+  const { data, dispatch } = useContext(ChatContext);
   const { currentUser } = useContext(AuthContext);
   const messagesEndRef = useRef(null);
 
@@ -28,7 +28,6 @@ const Chat = () => {
   }, [messages]);
 
   useEffect(() => {
-    // Request notification permission
     if (!("Notification" in window)) {
       console.log("This browser does not support desktop notification");
     } else if (Notification.permission !== "granted") {
@@ -36,14 +35,12 @@ const Chat = () => {
     }
 
     const getMessages = () => {
-      if (data.chatId && data.chatId !== "") {
-        console.log("Attempting to listen to chatId:", data.chatId);
+      if (data.chatId) {
         const unSub = onSnapshot(doc(db, "chats", data.chatId), (snapshot) => {
           if (snapshot.exists()) {
             const newMessages = snapshot.data().messages;
             setMessages(newMessages);
 
-            // Check for new messages and display notification
             if (newMessages.length > messages.length && newMessages[newMessages.length - 1].senderId !== currentUser.uid) {
               const lastMessage = newMessages[newMessages.length - 1];
               if (Notification.permission === "granted") {
@@ -63,7 +60,7 @@ const Chat = () => {
         };
       }
     };
-    getMessages();
+    data.chatId && getMessages();
   }, [data.chatId, messages.length, currentUser.uid, data.user?.displayName, data.user?.photoURL]);
 
   const handleSend = async () => {
@@ -75,9 +72,7 @@ const Chat = () => {
 
       uploadTask.on(
         "state_changed",
-        (snapshot) => {
-          // Optional: Handle progress
-        },
+        (snapshot) => {},
         (error) => {
           console.error("Image upload error:", error);
         },
@@ -124,6 +119,10 @@ const Chat = () => {
     setImg(null);
   };
 
+  const handleBack = () => {
+    dispatch({ type: "RESET_CHAT" });
+  };
+
   const handleKey = (e) => {
     e.code === "Enter" && handleSend();
   };
@@ -131,35 +130,38 @@ const Chat = () => {
   return (
     <div className="chat">
       <div className="chatInfo">
+        <button className="back-button" onClick={handleBack}>←</button>
         <span>{data.user?.displayName}</span>
-        <div className="chatIcons">{/* Add chat icons here later */}</div>
+        <div className="chatIcons"></div>
       </div>
       <div className="messages">
         {messages.map((m) => (
           <Message message={m} key={m.id} />
         ))}
       </div>
-      <div className="input">
-        <input
-          type="text"
-          placeholder="Mesajınızı yazın..."
-          onChange={(e) => setText(e.target.value)}
-          value={text}
-          onKeyDown={handleKey}
-        />
-        <input
-          type="file"
-          style={{ display: "none" }}
-          id="file"
-          onChange={(e) => setImg(e.target.files[0])}
-        />
-        <label htmlFor="file">
-          <img src="https://cdn-icons-png.flaticon.com/512/3342/3342137.png" alt="" width="24" height="24" style={{ cursor: "pointer" }} />
-        </label>
-        <div className="send">
-          <button onClick={handleSend}>Gönder</button>
+      {data.user?.uid && (
+        <div className="input">
+          <input
+            type="text"
+            placeholder="Mesajınızı yazın..."
+            onChange={(e) => setText(e.target.value)}
+            value={text}
+            onKeyDown={handleKey}
+          />
+          <input
+            type="file"
+            style={{ display: "none" }}
+            id="file"
+            onChange={(e) => setImg(e.target.files[0])}
+          />
+          <label htmlFor="file">
+            <img src="https://cdn-icons-png.flaticon.com/512/3342/3342/3342137.png" alt="" width="24" height="24" style={{ cursor: "pointer" }} />
+          </label>
+          <div className="send">
+            <button onClick={handleSend}>Gönder</button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

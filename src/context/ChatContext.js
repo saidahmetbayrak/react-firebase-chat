@@ -16,15 +16,9 @@ export const ChatContextProvider = ({ children }) => {
     switch (action.type) {
       case "CHANGE_USER":
         const selectedUser = action.payload;
-
-        // Ensure currentUser and selectedUser are valid before proceeding
         if (!currentUser || !currentUser.uid || !selectedUser || !selectedUser.uid) {
-          return {
-            chatId: "null",
-            user: {},
-          };
+          return INITIAL_STATE;
         }
-
         return {
           user: selectedUser,
           chatId:
@@ -32,6 +26,8 @@ export const ChatContextProvider = ({ children }) => {
               ? currentUser.uid + selectedUser.uid
               : selectedUser.uid + currentUser.uid,
         };
+      case "RESET_CHAT":
+        return INITIAL_STATE;
 
       default:
         return state;
