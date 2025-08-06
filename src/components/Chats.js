@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
-import { ListGroup, Image, Badge } from 'react-bootstrap';
+import { ListGroup, Image } from 'react-bootstrap';
 import { AuthContext } from "../context/AuthContext";
 import { ChatContext } from "../context/ChatContext";
 import { db } from "../firebase";

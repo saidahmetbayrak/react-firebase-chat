@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import { Container, Row, Col, InputGroup, FormControl, Button, Image } from 'react-bootstrap';
+import { InputGroup, FormControl, Button, Image } from 'react-bootstrap';
 import { ArrowLeft } from 'react-bootstrap-icons';
 import { ChatContext } from '../context/ChatContext';
 import { AuthContext } from '../context/AuthContext';
