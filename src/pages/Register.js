@@ -19,13 +19,14 @@ const Register = () => {
 
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
-      const storageRef = ref(storage, displayName);
+      const storageRef = ref(storage, `users/${res.user.uid}/${displayName}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
 
       uploadTask.on(
         'state_changed',
         null,
         (error) => {
+          console.error("Upload error:", error);
           setErr(true);
         },
         () => {
