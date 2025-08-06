@@ -35,7 +35,7 @@ const Chats = () => {
           className="d-flex align-items-center p-3"
         >
           <Image 
-            src={chat[1].userInfo?.photoURL || ''} 
+            src={chat[1].userInfo?.photoURL || null} 
             roundedCircle 
             style={{ width: '50px', height: '50px', objectFit: 'cover', marginRight: '15px' }}
           />
