@@ -4,13 +4,13 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f0f2f5; /* Light gray background */
+  background-color: #f0f2f5;
   color: #333;
 }
 
 /* Form Container (Login/Register) */
 .form-container {
-  background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%); /* Gradient background */
+  background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
   height: 100vh;
   display: flex;
   align-items: center;
@@ -18,18 +18,18 @@ body {
 }
 
 .form-wrapper {
-  background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white */
+  background-color: rgba(255, 255, 255, 0.95);
   padding: 40px;
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Deeper shadow */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   text-align: center;
   width: 100%;
   max-width: 450px;
-  backdrop-filter: blur(5px); /* Frosted glass effect */
+  backdrop-filter: blur(5px);
 }
 
 .form-wrapper .logo {
-  color: #2575fc; /* Blue from gradient */
+  color: #2575fc;
   font-weight: 700;
   font-size: 32px;
   margin-bottom: 10px;
@@ -65,7 +65,7 @@ body {
 }
 
 .form-wrapper button {
-  background-color: #2575fc; /* Blue from gradient */
+  background-color: #2575fc;
   color: white;
   padding: 15px;
   font-weight: 600;
@@ -82,7 +82,7 @@ body {
 }
 
 .form-wrapper .error {
-  color: #e74c3c; /* Red for errors */
+  color: #e74c3c;
   font-size: 14px;
   margin-top: 15px;
 }
@@ -128,7 +128,7 @@ body {
 /* Sidebar */
 .sidebar {
   flex: 1;
-  background-color: #2f3640; /* Darker shade for sidebar */
+  background-color: #2f3640;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -138,7 +138,7 @@ body {
 .sidebar .navbar {
   display: flex;
   align-items: center;
-  background-color: #222831; /* Even darker for navbar */
+  background-color: #222831;
   height: 60px;
   padding: 15px;
   justify-content: space-between;
@@ -149,7 +149,7 @@ body {
 .sidebar .navbar .logo {
   font-weight: 700;
   font-size: 22px;
-  color: #00adb5; /* Accent color */
+  color: #00adb5;
 }
 
 .sidebar .navbar .user {
@@ -164,7 +164,7 @@ body {
 }
 
 .sidebar .navbar .user button {
-  background-color: #00adb5; /* Accent color */
+  background-color: #00adb5;
   color: white;
   font-size: 14px;
   border: none;
@@ -178,7 +178,6 @@ body {
   background-color: #008c92;
 }
 
-/* Search */
 .sidebar .search {
   padding: 15px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -191,7 +190,7 @@ body {
   outline: none;
   padding: 10px 15px;
   border-radius: 5px;
-  width: calc(100% - 30px); /* Adjust for padding */
+  width: calc(100% - 30px);
   font-size: 16px;
 }
 
@@ -210,7 +209,7 @@ body {
 }
 
 .sidebar .userChat:hover {
-  background-color: #39424e; /* Slightly lighter on hover */
+  background-color: #39424e;
 }
 
 .sidebar .userChat img {
@@ -218,13 +217,13 @@ body {
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #00adb5; /* Accent border */
+  border: 2px solid #00adb5;
 }
 
 .sidebar .userChatInfo {
   display: flex;
   flex-direction: column;
-  position: relative; /* For positioning the online/offline dot */
+  position: relative;
 }
 
 .sidebar .userChatInfo span {
@@ -238,7 +237,6 @@ body {
   text-align: center;
 }
 
-/* Online/Offline Dots */
 .online-dot,
 .offline-dot {
   width: 10px;
@@ -246,29 +244,29 @@ body {
   border-radius: 50%;
   position: absolute;
   top: 0;
-  right: -15px; /* Adjust as needed */
+  right: -15px;
   border: 1px solid white;
 }
 
 .online-dot {
-  background-color: #28a745; /* Green for online */
+  background-color: #28a745;
 }
 
 .offline-dot {
-  background-color: #dc3545; /* Red for offline */
+  background-color: #dc3545;
 }
 
 /* Chat Area */
 .chat {
   flex: 2;
-  background-color: #f5f7fb; /* Lighter background for chat */
+  background-color: #f5f7fb;
   display: flex;
   flex-direction: column;
 }
 
 .chat .chatInfo {
   height: 60px;
-  background-color: #e0e0e0; /* Light gray header */
+  background-color: #e0e0e0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -294,9 +292,9 @@ body {
 }
 
 .chat .messages {
-  flex-grow: 1; /* Take available space */
+  flex-grow: 1;
   padding: 20px;
-  overflow-y: auto; /* Scroll for messages */
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -305,11 +303,11 @@ body {
 .chat .message {
   display: flex;
   gap: 15px;
-  align-items: flex-end; /* Align messages to bottom */
+  align-items: flex-end;
 }
 
 .chat .message.owner {
-  flex-direction: row-reverse; /* Owner messages on right */
+  flex-direction: row-reverse;
 }
 
 .chat .message .messageInfo {
@@ -330,7 +328,7 @@ body {
 }
 
 .chat .message .messageContent {
-  max-width: 70%; /* Limit message width */
+  max-width: 70%;
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -339,15 +337,15 @@ body {
 .chat .message .messageContent p {
   background-color: white;
   padding: 12px 18px;
-  border-radius: 18px; /* More rounded corners */
+  border-radius: 18px;
   max-width: max-content;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   line-height: 1.4;
-  word-wrap: break-word; /* Break long words */
+  word-wrap: break-word;
 }
 
 .chat .message.owner .messageContent p {
-  background-color: #00adb5; /* Accent color for owner messages */
+  background-color: #00adb5;
   color: white;
   border-radius: 18px;
 }
@@ -369,7 +367,7 @@ body {
 }
 
 .chat .input input {
-  flex-grow: 1; /* Take available space */
+  flex-grow: 1;
   border: none;
   outline: none;
   font-size: 17px;
@@ -403,7 +401,7 @@ body {
   border: none;
   padding: 10px 20px;
   color: white;
-  background-color: #00adb5; /* Accent color */
+  background-color: #00adb5;
   border-radius: 20px;
   cursor: pointer;
   font-size: 16px;
@@ -416,68 +414,31 @@ body {
   transform: translateY(-2px);
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .home .container {
-    width: 100%;
-    height: 100%;
-    border-radius: 0;
-    flex-direction: column;
-  }
-
-  .sidebar {
-    flex: none;
-    height: 100px; /* Smaller sidebar on mobile */
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 15px;
-  }
-
-  .sidebar .navbar {
-    height: auto;
-    padding: 0;
-    background-color: transparent;
-    box-shadow: none;
-  }
-
-  .sidebar .search {
-    display: none; /* Hide search on small screens for simplicity */
-  }
-
-  .sidebar .userChat {
-    display: none; /* Hide chat list on small screens */
-  }
-
-  .chat {
-    flex: 1;
-  }
-
-  .form-wrapper {
-    padding: 20px;
-    max-width: 90%;
-  }
+/* Hide back button on desktop by default */
+.chat .chatInfo .back-button {
+    display: none;
 }
 
-/* Responsive Styles for Mobile Chat View */
+/* --- RESPONSIVE STYLES --- */
 @media screen and (max-width: 768px) {
   .home {
     position: relative;
-    overflow: hidden;
+    overflow: hidden; /* Prevent scrollbars during transition */
   }
 
   .home .container {
-    /* This rule is duplicated, but we will ensure the final version is clean. */
-    /* It's part of the logic to create a slidable container */
+    width: 200%; /* Container is twice the screen width */
+    height: 100%;
+    border-radius: 0;
+    flex-direction: row; /* Place sidebar and chat side-by-side */
     transition: transform 0.3s ease-in-out;
-    width: 200%;
-    display: flex;
-    flex-direction: row; /* This should be row to place sidebar and chat side-by-side */
   }
 
-  .home .sidebar, .home .chat {
-    width: 50%; /* Each takes half of the double-width container */
-    height: 100%; /* Ensure they take full height */
+  .home .sidebar,
+  .home .chat {
+    width: 50%; /* Each takes up half of the 200% container */
+    height: 100%;
+    flex-shrink: 0; /* Prevent components from shrinking */
   }
 
   /* When a chat is selected, slide the container to the left */
@@ -499,9 +460,10 @@ body {
   .chat .chatInfo span {
     font-size: 16px;
   }
-}
 
-/* Hide back button on desktop */
-.chat .chatInfo .back-button {
-    display: none;
+  .form-wrapper {
+    padding: 20px;
+    max-width: 90%;
+    height: auto;
+  }
 }
