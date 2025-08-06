@@ -36,7 +36,7 @@ const Chats = () => {
         <ListGroup.Item 
           key={chat[0]} 
           action 
-          onClick={() => handleSelect(chat[1].userInfo)}
+          onClick={() => chat[1] && handleSelect(chat[1].userInfo)}
           className="d-flex align-items-center p-3"
         >
           <Image 
