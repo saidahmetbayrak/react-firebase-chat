@@ -63,7 +63,7 @@ const Search = () => {
           [combinedId + ".userInfo"]: {
             uid: currentUser.uid,
             displayName: currentUser.displayName,
-            photoURL: currentUser.photoURL,
+            photoURL: currentUser.photoURL || null,
           },
           [combinedId + ".date"]: serverTimestamp(),
         }, { merge: true });
