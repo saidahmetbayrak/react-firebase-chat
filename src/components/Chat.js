@@ -77,7 +77,7 @@ const Chat = () => {
         <Button variant="light" className="d-md-none me-2" onClick={handleBack}>
           <ArrowLeft />
         </Button>
-        <Image src={data.user.photoURL || 'https://via.placeholder.com/40'} roundedCircle style={{ width: '40px', height: '40px', objectFit: 'cover', marginRight: '15px' }} />
+        <Image src={data.user.photoURL || ''} roundedCircle style={{ width: '40px', height: '40px', objectFit: 'cover', marginRight: '15px' }} />
         <h5 className="mb-0 fw-bold">{data.user.displayName}</h5>
       </div>
 

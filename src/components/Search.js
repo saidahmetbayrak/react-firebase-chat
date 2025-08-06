@@ -95,7 +95,7 @@ const Search = () => {
       {users.map(user => (
         <Card key={user.uid} onClick={() => handleSelect(user)} style={{ cursor: 'pointer', marginTop: '10px' }}>
           <Card.Body className="d-flex align-items-center">
-            <Image src={user.photoURL || 'https://via.placeholder.com/50'} roundedCircle style={{ width: '50px', height: '50px', objectFit: 'cover', marginRight: '15px' }} />
+            <Image src={user.photoURL || ''} roundedCircle style={{ width: '50px', height: '50px', objectFit: 'cover', marginRight: '15px' }} />
             <Card.Title className="mb-0">{user.displayName}</Card.Title>
           </Card.Body>
         </Card>
