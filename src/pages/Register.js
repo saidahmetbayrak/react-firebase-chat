@@ -67,10 +67,7 @@ const Register = () => {
             <Form.Group className="mb-3">
               <Form.Control type="password" placeholder="Password" required />
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Add an avatar</Form.Label>
-              <Form.Control type="file" required />
-            </Form.Group>
+            
             <Button variant="primary" type="submit" className="w-100">
               Sign up
             </Button>
