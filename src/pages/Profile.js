@@ -4,13 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from '../context/AuthContext';
 import { updateProfile } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { db, storage } from "../firebase";
+import { db } from "../firebase";
 
 const Profile = () => {
   const { currentUser } = useContext(AuthContext);
   const [displayName, setDisplayName] = useState(currentUser.displayName || "");
-  const [photo, setPhoto] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -23,26 +21,14 @@ const Profile = () => {
     setSuccess(null);
 
     try {
-      let photoURL = currentUser.photoURL;
-
-      if (photo) {
-        const storageRef = ref(storage, `profile_pictures/${currentUser.uid}`);
-        const uploadTask = uploadBytesResumable(storageRef, photo);
-
-        await uploadTask;
-        photoURL = await getDownloadURL(storageRef);
-      }
-
       // Update Firebase Auth profile
       await updateProfile(currentUser, {
         displayName,
-        photoURL: photoURL,
       });
 
       // Update Firestore user document
       await updateDoc(doc(db, "users", currentUser.uid), {
         displayName,
-        photoURL: photoURL,
       });
 
       setSuccess("Profil başarıyla güncellendi!");
@@ -61,19 +47,10 @@ const Profile = () => {
         <form onSubmit={handleUpdate}>
           <div className="profile-image-upload">
             <img
-              src={currentUser.photoURL || "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"}
+              src="https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
               alt="Profil Resmi"
               className="profile-avatar"
             />
-            <input
-              type="file"
-              id="photo-upload"
-              style={{ display: "none" }}
-              onChange={(e) => setPhoto(e.target.files[0])}
-            />
-            <label htmlFor="photo-upload" className="upload-button">
-              Resim Değiştir
-            </label>
           </div>
           <input
             type="text"

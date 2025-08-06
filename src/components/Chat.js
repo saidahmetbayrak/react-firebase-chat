@@ -3,16 +3,14 @@ import { InputGroup, FormControl, Button, Image } from 'react-bootstrap';
 import { ArrowLeft } from 'react-bootstrap-icons';
 import { ChatContext } from '../context/ChatContext';
 import { AuthContext } from '../context/AuthContext';
-import { db, storage } from "../firebase";
+import { db } from "../firebase";
 import { doc, onSnapshot, updateDoc, arrayUnion, Timestamp, serverTimestamp } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { v4 as uuid } from "uuid";
 import Message from './Message';
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
-  const [img, setImg] = useState(null);
   
   const { data, dispatch } = useContext(ChatContext);
   const { currentUser } = useContext(AuthContext);
@@ -32,14 +30,7 @@ const Chat = () => {
   }, [data.chatId]);
 
   const handleSend = async () => {
-    if (text.trim() === "" && !img) return;
-
-    let downloadURL = null;
-    if (img) {
-      const storageRef = ref(storage, uuid());
-      const uploadTask = await uploadBytesResumable(storageRef, img);
-      downloadURL = await getDownloadURL(uploadTask.ref);
-    }
+    if (text.trim() === "") return;
 
     await updateDoc(doc(db, "chats", data.chatId), {
       messages: arrayUnion({
@@ -47,11 +38,11 @@ const Chat = () => {
         text,
         senderId: currentUser.uid,
         date: Timestamp.now(),
-        ...(downloadURL && { img: downloadURL }),
+        
       }),
     });
 
-    const lastMessage = text || "Image sent";
+    const lastMessage = text;
     await updateDoc(doc(db, "userChats", currentUser.uid), {
       [data.chatId + ".lastMessage"]: { text: lastMessage },
       [data.chatId + ".date"]: serverTimestamp(),
@@ -62,7 +53,7 @@ const Chat = () => {
     });
 
     setText("");
-    setImg(null);
+    
   };
 
   const handleBack = () => {

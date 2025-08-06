@@ -11,7 +11,7 @@ import { ChatContextProvider } from "./context/ChatContext";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import Profile from "./components/Profile";
+import Profile from "./pages/Profile";
 
 // A wrapper for protected routes
 const ProtectedRoute = ({ children }) => {

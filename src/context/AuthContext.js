@@ -1,7 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, rtdb } from "../firebase";
-import { ref, set, onDisconnect } from "firebase/database";
+import { auth } from "../firebase";
 
 export const AuthContext = createContext();
 
@@ -15,12 +14,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
 
       if (user) {
-        // Set user online status in Realtime Database
-        const userStatusRef = ref(rtdb, 'users/' + user.uid + '/online');
-        set(userStatusRef, true);
-
-        // Set up onDisconnect to set status to false when user disconnects
-        onDisconnect(userStatusRef).set(false);
+        // No longer setting online status in Realtime Database
       }
     });
 
