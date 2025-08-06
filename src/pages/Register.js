@@ -1,89 +1,83 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { auth, db, storage } from "../firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { doc, setDoc } from "firebase/firestore";
+import { useNavigate, Link } from "react-router-dom";
+import { Container, Form, Button, Card, Alert } from 'react-bootstrap';
 
 const Register = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [err, setErr] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    const displayName = e.target.displayName.value;
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-    const file = e.target.file.files[0];
+    const displayName = e.target[0].value;
+    const email = e.target[1].value;
+    const password = e.target[2].value;
+    const file = e.target[3].files[0];
 
     try {
-      // Create user in Firebase Auth
       const res = await createUserWithEmailAndPassword(auth, email, password);
+      const storageRef = ref(storage, displayName);
+      const uploadTask = uploadBytesResumable(storageRef, file);
 
-      // Create a unique image name
-      const date = new Date().getTime();
-      const storageRef = ref(storage, `${displayName + date}`);
-
-      await uploadBytesResumable(storageRef, file).then(() => {
-        getDownloadURL(storageRef).then(async (downloadURL) => {
-          try {
-            // Update profile
+      uploadTask.on(
+        'state_changed',
+        null,
+        (error) => {
+          setErr(true);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
             await updateProfile(res.user, {
               displayName,
               photoURL: downloadURL,
             });
-
-            // Create user document in Firestore
             await setDoc(doc(db, "users", res.user.uid), {
               uid: res.user.uid,
               displayName,
               email,
               photoURL: downloadURL,
             });
-
-            // Create empty user chats collection
             await setDoc(doc(db, "userChats", res.user.uid), {});
-
-            setLoading(false);
-            navigate("/"); // Redirect to home page after successful registration
-          } catch (err) {
-            setError(err.message);
-            setLoading(false);
-          }
-        });
-      });
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
+            navigate("/");
+          });
+        }
+      );
+    } catch (error) {
+      setErr(true);
     }
   };
 
   return (
-    <div className="form-container">
-      <div className="form-wrapper">
-        <h1>WebChat - Kaydol</h1>
-        <form onSubmit={handleSubmit}>
-          <input type="text" name="displayName" placeholder="Görünen Ad" required />
-          <input type="email" name="email" placeholder="E-posta" required />
-          <input type="password" name="password" placeholder="Şifre" required />
-          <input type="file" name="file" id="file" style={{ display: "none" }} />
-          <label htmlFor="file">
-            <img src="https://cdn-icons-png.flaticon.com/512/107/107097.png" alt="" width="30" height="30" />
-            Profil resmi ekle
-          </label>
-          <button type="submit" disabled={loading}>
-            {loading ? "Kaydolunuyor..." : "Kaydol"}
-          </button>
-          {error && <p className="error">{error}</p>}
-        </form>
-        <p>
-          Zaten bir hesabınız var mı? <Link to="/login">Giriş Yap</Link>
-        </p>
-      </div>
+    <div className="form-container vh-100 d-flex align-items-center justify-content-center">
+      <Card style={{ width: '25rem', padding: '2rem' }}>
+        <Card.Body>
+          <h1 className="text-center mb-4 fw-bold">Chat App</h1>
+          <h5 className="text-center text-muted mb-4">Register</h5>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Control type="text" placeholder="Display Name" required />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Control type="email" placeholder="Email" required />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Control type="password" placeholder="Password" required />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Add an avatar</Form.Label>
+              <Form.Control type="file" required />
+            </Form.Group>
+            <Button variant="primary" type="submit" className="w-100">
+              Sign up
+            </Button>
+            {err && <Alert variant="danger" className="mt-3">Something went wrong</Alert>}
+          </Form>
+          <p className="mt-3 text-center">You do have an account? <Link to="/login">Login</Link></p>
+        </Card.Body>
+      </Card>
     </div>
   );
 };

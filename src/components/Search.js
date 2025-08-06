@@ -1,22 +1,18 @@
-
-import React, { useState, useContext } from "react";
-import { collection, query, where, getDocs, setDoc, doc, updateDoc, serverTimestamp, getDoc } from "firebase/firestore";
+import React, { useState, useContext } from 'react';
+import { Form, InputGroup, Button, Card, Alert, Image } from 'react-bootstrap';
+import { collection, query, where, getDocs, serverTimestamp, setDoc, doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from '../context/AuthContext';
 
 const Search = () => {
   const [username, setUsername] = useState("");
   const [user, setUser] = useState(null);
   const [err, setErr] = useState(false);
-
   const { currentUser } = useContext(AuthContext);
 
   const handleSearch = async () => {
-    const q = query(
-      collection(db, "users"),
-      where("displayName", "==", username)
-    );
-
+    if (!username) return;
+    const q = query(collection(db, "users"), where("displayName", "==", username));
     try {
       const querySnapshot = await getDocs(q);
       if (querySnapshot.empty) {
@@ -28,7 +24,7 @@ const Search = () => {
           setErr(false);
         });
       }
-    } catch (err) {
+    } catch (error) {
       setErr(true);
       setUser(null);
     }
@@ -39,21 +35,17 @@ const Search = () => {
   };
 
   const handleSelect = async () => {
-    // Check whether the group (chats in firestore) exists, if not create
     const combinedId = currentUser.uid > user.uid ? currentUser.uid + user.uid : user.uid + currentUser.uid;
     try {
       const res = await getDoc(doc(db, "chats", combinedId));
-
       if (!res.exists()) {
-        // Create a chat in chats collection
         await setDoc(doc(db, "chats", combinedId), { messages: [] });
 
-        // Create user chats
         await updateDoc(doc(db, "userChats", currentUser.uid), {
           [combinedId + ".userInfo"]: {
             uid: user.uid,
             displayName: user.displayName,
-            photoURL: user.photoURL || "",
+            photoURL: user.photoURL,
           },
           [combinedId + ".date"]: serverTimestamp(),
         });
@@ -62,36 +54,41 @@ const Search = () => {
           [combinedId + ".userInfo"]: {
             uid: currentUser.uid,
             displayName: currentUser.displayName,
-            photoURL: currentUser.photoURL || "",
+            photoURL: currentUser.photoURL,
           },
           [combinedId + ".date"]: serverTimestamp(),
         });
       }
-    } catch (err) {}
+    } catch (error) {}
 
     setUser(null);
     setUsername("");
   };
 
   return (
-    <div className="search">
-      <div className="searchForm">
-        <input
-          type="text"
+    <div className="search-form p-3">
+      <InputGroup className="mb-3">
+        <Form.Control
           placeholder="Find a user"
+          aria-label="Find a user"
           onKeyDown={handleKey}
           onChange={(e) => setUsername(e.target.value)}
           value={username}
         />
-      </div>
-      {err && <span>Kullanıcı bulunamadı!</span>}
+        <Button variant="outline-secondary" onClick={handleSearch}>
+          Search
+        </Button>
+      </InputGroup>
+
+      {err && <Alert variant="danger" className="mt-2">User not found!</Alert>}
+      
       {user && (
-        <div className="userChat" onClick={handleSelect}>
-          <img src={user.photoURL || "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"} alt="" />
-          <div className="userChatInfo">
-            <span>{user.displayName}</span>
-          </div>
-        </div>
+        <Card onClick={handleSelect} style={{ cursor: 'pointer' }}>
+          <Card.Body className="d-flex align-items-center">
+            <Image src={user.photoURL} roundedCircle style={{ width: '50px', height: '50px', objectFit: 'cover', marginRight: '15px' }} />
+            <Card.Title className="mb-0">{user.displayName}</Card.Title>
+          </Card.Body>
+        </Card>
       )}
     </div>
   );

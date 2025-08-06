@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import AppWithAuth from './App';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/main.css'; // Import the CSS file
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

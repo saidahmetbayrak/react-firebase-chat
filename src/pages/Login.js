@@ -1,48 +1,47 @@
-
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
+import { Container, Form, Button, Card, Alert } from 'react-bootstrap';
 
 const Login = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [err, setErr] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    const email = e.target.email.value;
-    const password = e.target.password.value;
+    const email = e.target[0].value;
+    const password = e.target[1].value;
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      setLoading(false);
-      navigate("/"); // Redirect to home page after successful login
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
+      navigate("/")
+    } catch (error) {
+      setErr(true);
     }
   };
 
   return (
-    <div className="form-container">
-      <div className="form-wrapper">
-        <h1>WebChat - Giriş</h1>
-        <form onSubmit={handleSubmit}>
-          <input type="email" name="email" placeholder="Email" required />
-          <input type="password" name="password" placeholder="Password" required />
-          <button type="submit" disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
-          </button>
-          {error && <p className="error">{error}</p>}
-        </form>
-        <p>
-          Hesabınız yok mu? <Link to="/register">Kaydol</Link>
-        </p>
-      </div>
+    <div className="form-container vh-100 d-flex align-items-center justify-content-center">
+      <Card style={{ width: '25rem', padding: '2rem' }}>
+        <Card.Body>
+          <h1 className="text-center mb-4 fw-bold">Chat App</h1>
+          <h5 className="text-center text-muted mb-4">Login</h5>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Control type="email" placeholder="Email" required />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Control type="password" placeholder="Password" required />
+            </Form.Group>
+            <Button variant="primary" type="submit" className="w-100">
+              Sign in
+            </Button>
+            {err && <Alert variant="danger" className="mt-3">Something went wrong</Alert>}
+          </Form>
+          <p className="mt-3 text-center">You don't have an account? <Link to="/register">Register</Link></p>
+        </Card.Body>
+      </Card>
     </div>
   );
 };

@@ -1,37 +1,46 @@
 import React, { useContext, useRef, useEffect } from 'react';
+import { Image } from 'react-bootstrap';
 import { AuthContext } from '../context/AuthContext';
 import { ChatContext } from '../context/ChatContext';
-import moment from 'moment';
 
 const Message = ({ message }) => {
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
-
   const ref = useRef();
 
   useEffect(() => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
   }, [message]);
 
+  const isOwner = message.senderId === currentUser.uid;
+  const sender = isOwner ? currentUser : data.user;
+
+  const messageDate = message.date?.toDate();
+  const timeString = messageDate ? messageDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
+
   return (
-    <div
-      ref={ref}
-      className={`message ${message.senderId === currentUser.uid && "owner"}`}
-    >
-      <div className="messageInfo">
-        <img
-          src={
-            message.senderId === currentUser.uid
-              ? currentUser.photoURL || "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
-              : data.user.photoURL || "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
-          }
-          alt=""
+    <div ref={ref} className={`d-flex mb-3 ${isOwner ? 'justify-content-end' : ''}`}>
+      <div className={`d-flex align-items-end ${isOwner ? 'flex-row-reverse' : ''}`}>
+        <Image 
+          src={sender.photoURL} 
+          roundedCircle 
+          style={{ 
+            width: '40px', 
+            height: '40px', 
+            objectFit: 'cover', 
+            margin: isOwner ? '0 0 0 10px' : '0 10px 0 0' 
+          }} 
         />
-        <span>{moment(message.date.toDate()).fromNow()}</span>
-      </div>
-      <div className="messageContent">
-        <p>{message.text}</p>
-        {message.img && <img src={message.img} alt="" />}
+        <div 
+          className={`p-3 rounded-3 ${isOwner ? 'bg-primary text-white' : 'bg-white'}`}
+          style={{ maxWidth: '400px', boxShadow: '0 1px 1px rgba(0,0,0,0.05)' }}
+        >
+          {message.text && <p className="mb-0">{message.text}</p>}
+          {message.img && <Image src={message.img} fluid rounded className="mt-2" />}
+          <small className={`d-block text-end mt-2 ${isOwner ? 'text-light' : 'text-muted'}`}>
+            {timeString}
+          </small>
+        </div>
       </div>
     </div>
   );

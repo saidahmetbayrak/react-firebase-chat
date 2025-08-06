@@ -1,14 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
-import { ref, onValue } from "firebase/database";
+import { ListGroup, Image, Badge } from 'react-bootstrap';
 import { AuthContext } from "../context/AuthContext";
 import { ChatContext } from "../context/ChatContext";
-import { db, rtdb } from "../firebase";
+import { db } from "../firebase";
 
 const Chats = () => {
-  const [chats, setChats] = useState([]);
-  const [onlineUsers, setOnlineUsers] = useState({});
-
+  const [chats, setChats] = useState({});
   const { currentUser } = useContext(AuthContext);
   const { dispatch } = useContext(ChatContext);
 
@@ -17,60 +15,40 @@ const Chats = () => {
       const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
         setChats(doc.data() || {});
       });
-
-      return () => {
-        unsub();
-      };
+      return () => unsub();
     };
 
-    currentUser.uid && currentUser.uid !== "" && getChats();
-    console.log("Current User UID in Chats:", currentUser.uid); // Added console.log
+    currentUser.uid && getChats();
   }, [currentUser.uid]);
-
-  useEffect(() => {
-    if (chats) {
-      Object.entries(chats).forEach(([chatId, chat]) => {
-        if (chat.userInfo && chat.userInfo.uid) { // Add this check
-          const userUid = chat.userInfo.uid;
-          const userStatusRef = ref(rtdb, 'users/' + userUid + '/online');
-          onValue(userStatusRef, (snapshot) => {
-            setOnlineUsers((prev) => ({
-              ...prev,
-              [userUid]: snapshot.val(),
-            }));
-          });
-        }
-      });
-    }
-  }, [chats]);
 
   const handleSelect = (u) => {
     dispatch({ type: "CHANGE_USER", payload: u });
   };
 
   return (
-    <div className="chats">
-      {Object.entries(chats)?.sort((a,b)=>b[1].date?.toDate() - a[1].date?.toDate()).map((chat) => (
-        <div
-          className="userChat"
-          key={chat[0]}
+    <ListGroup variant="flush" className="flex-grow-1" style={{ overflowY: 'auto' }}>
+      {Object.entries(chats)?.sort((a,b) => b[1].date - a[1].date).map((chat) => (
+        <ListGroup.Item 
+          key={chat[0]} 
+          action 
           onClick={() => handleSelect(chat[1].userInfo)}
+          className="d-flex align-items-center p-3"
         >
-          {chat[1].userInfo && (
-            <img src={chat[1].userInfo.photoURL || "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"} alt="" />
-          )}
-          <div className="userChatInfo">
-            {chat[1].userInfo && <span>{chat[1].userInfo.displayName}</span>}
-            {onlineUsers[chat[1].userInfo?.uid] ? (
-              <span className="online-dot"></span>
-            ) : (
-              <span className="offline-dot"></span>
-            )}
-            <p>{chat[1].lastMessage?.text}</p>
+          <Image 
+            src={chat[1].userInfo.photoURL} 
+            roundedCircle 
+            style={{ width: '50px', height: '50px', objectFit: 'cover', marginRight: '15px' }}
+          />
+          <div className="w-100">
+            <div className="d-flex justify-content-between">
+              <h6 className="mb-1 fw-bold">{chat[1].userInfo.displayName}</h6>
+              {/* <small>1 day ago</small> */}
+            </div>
+            <p className="mb-1 text-muted small">{chat[1].lastMessage?.text}</p>
           </div>
-        </div>
+        </ListGroup.Item>
       ))}
-    </div>
+    </ListGroup>
   );
 };
 
