@@ -44,7 +44,7 @@ const Chats = () => {
               <h6 className="mb-1 fw-bold">{chat[1].userInfo?.displayName}</h6>
               {/* <small>1 day ago</small> */}
             </div>
-            <p className="mb-1 text-muted small">{chat[1].lastMessage?.text}</p>
+            <p className="mb-1 text-muted small">{chat[1]?.lastMessage?.text}</p>
           </div>
         </ListGroup.Item>
       ))}
