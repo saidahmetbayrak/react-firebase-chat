@@ -22,7 +22,12 @@ const Chats = () => {
   }, [currentUser.uid]);
 
   const handleSelect = (u) => {
-    dispatch({ type: "CHANGE_USER", payload: u });
+    console.log("Selected user info:", u);
+    if (u) {
+      dispatch({ type: "CHANGE_USER", payload: u });
+    } else {
+      console.error("Attempted to select an undefined user.");
+    }
   };
 
   return (
