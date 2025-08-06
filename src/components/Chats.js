@@ -41,7 +41,7 @@ const Chats = () => {
           />
           <div className="w-100">
             <div className="d-flex justify-content-between">
-              <h6 className="mb-1 fw-bold">{chat[1].userInfo.displayName}</h6>
+              <h6 className="mb-1 fw-bold">{chat[1].userInfo?.displayName}</h6>
               {/* <small>1 day ago</small> */}
             </div>
             <p className="mb-1 text-muted small">{chat[1].lastMessage?.text}</p>
